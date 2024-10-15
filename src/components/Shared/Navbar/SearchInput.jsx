@@ -1,18 +1,27 @@
 import { useEffect, useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import { getAllBooks } from "../../../api/books";
 
 const SearchInput = () => {
-  const [books, setBooks] = useState([]);
+  const [allBooks, setAllBooks] = useState([]); // State to store all books
+  const [books, setBooks] = useState([]); // State to store current books for the current page
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    getAllBooks().then((data) => {
-      setBooks(data.results);
-    });
-  }, []);
+    const fetchBooks = async (page) => {
+      const res = await fetch(`https://gutendex.com/books?page=${page}`);
+      const data = await res.json();
+      setAllBooks((prevBooks) => [...prevBooks, ...data.results]); // Append new books to the existing array
+      setBooks(data.results); // Set current books to the fetched page's results
+      setTotalPages(Math.ceil(data.count / data.results.length));
+    };
 
-  const filteredBooks = books.filter((book) =>
+    fetchBooks(currentPage);
+  }, [currentPage]);
+
+  // Filter books by title across all pages
+  const filteredBooks = allBooks.filter((book) =>
     book.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -27,27 +36,26 @@ const SearchInput = () => {
         placeholder="Search..."
         className="w-full py-2 pl-10 pr-5 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-500"
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)} 
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      {searchTerm &&
-        filteredBooks.length > 0 && (
-          <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-1 shadow-lg max-h-60 overflow-y-auto">
-            {filteredBooks.map((book) => (
-              <div
-                key={book.id}
-                className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
-              >
-                <img
-                  src={book.formats["image/jpeg"]}
-                  alt={book.title}
-                  className="w-10 h-10 mr-2 rounded"
-                />
-                <span className="text-gray-800">{book.title}</span>
-              </div>
-            ))}
-          </div>
-        )}
+      {searchTerm && filteredBooks.length > 0 && (
+        <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-1 shadow-lg max-h-60 overflow-y-auto">
+          {filteredBooks.map((book) => (
+            <div
+              key={book.id}
+              className="flex items-center p-2 hover:bg-gray-100 cursor-pointer"
+            >
+              <img
+                src={book.formats["image/jpeg"]}
+                alt={book.title}
+                className="w-10 h-10 mr-2 rounded"
+              />
+              <span className="text-gray-800">{book.title}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

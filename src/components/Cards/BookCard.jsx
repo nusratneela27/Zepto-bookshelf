@@ -16,20 +16,20 @@ const BookCard = ({ book }) => {
   };
 
   return (
-    <div className="flex flex-col items-center p-5 rounded-sm shadow-lg">
+    <div className="flex flex-col items-center p-5 rounded-sm shadow-lg max-w-xs w-full">
       {/* Book Image with Hover Effect */}
-      <div className="relative w-full h-96 mb-4 group">
+      <div className="relative mb-4 group">
         <img
           src={book.formats["image/jpeg"]}
           alt={book.title}
-          className="w-full h-full rounded-sm"
+          className="rounded-sm h-64 w-48 object-cover"
         />
 
         {/* Overlay with Framer Motion for smooth transition */}
         <motion.div
           className="absolute inset-0 bg-sky-600 bg-opacity-60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300"
           initial={{ opacity: 0 }}
-          whileHover={{ opacity: 1, backgroundColor: "rgba(3, 169, 244, 0.6)"}}
+          whileHover={{ opacity: 1, backgroundColor: "rgba(3, 169, 244, 0.6)" }}
           transition={{ duration: 0.5 }}
         >
           {/* Heart Icon with Framer Motion animation */}
@@ -42,9 +42,9 @@ const BookCard = ({ book }) => {
             onClick={toggleWishList}
           >
             {isWishListed ? (
-              <FaHeart size={50} className=" text-white" />
+              <FaHeart size={40} className="text-white" />
             ) : (
-              <FaRegHeart size={50} className=" text-white" />
+              <FaRegHeart size={40} className="text-white" />
             )}
           </motion.div>
 
@@ -59,8 +59,8 @@ const BookCard = ({ book }) => {
             transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
           >
             <FaArrowRight
-              size={50}
-              className=" text-white border-4 rounded-full p-2 cursor-pointer"
+              size={40}
+              className="text-white border-2 rounded-full p-1 cursor-pointer"
             />
           </motion.a>
         </motion.div>
@@ -68,14 +68,17 @@ const BookCard = ({ book }) => {
 
       {/* Book Title */}
       <h2
-        className="text-2xl font-bold mb-2 w-full text-center overflow-hidden whitespace-nowrap text-ellipsis cursor-pointer hover:text-sky-600"
+        className="text-xl font-bold mb-2 w-full text-center overflow-hidden whitespace-nowrap text-ellipsis cursor-pointer hover:text-sky-600"
         title={book.title}
       >
         {book.title}
       </h2>
 
       {/* Book Author */}
-      <p className="text-gray-600 mb-2 text-center">
+      <p
+        // className="text-gray-600 mb-2 text-center"
+        className="text-gray-600 mb-2 w-full text-center overflow-hidden whitespace-nowrap text-ellipsis"
+      >
         by {book.authors.map((author) => author.name).join(", ")}
       </p>
 
