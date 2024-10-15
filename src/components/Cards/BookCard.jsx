@@ -29,14 +29,14 @@ const BookCard = ({ book }) => {
         <motion.div
           className="absolute inset-0 bg-sky-600 bg-opacity-60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300"
           initial={{ opacity: 0 }}
-          whileHover={{ opacity: 1, backgroundColor: "rgba(3, 169, 244, 0.6)" }} // sky-600 with opacity
+          whileHover={{ opacity: 1, backgroundColor: "rgba(3, 169, 244, 0.6)"}}
           transition={{ duration: 0.5 }}
         >
           {/* Heart Icon with Framer Motion animation */}
           <motion.div
             className="cursor-pointer me-5"
             initial={{ y: -50, opacity: 0 }}
-            animate={{ y:  0, opacity: 1 }}
+            animate={{ y: 0, opacity: 1 }}
             whileHover={{ scale: 1.1 }}
             transition={{ type: "spring", stiffness: 300 }}
             onClick={toggleWishList}

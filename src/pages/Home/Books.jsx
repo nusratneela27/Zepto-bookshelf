@@ -2,18 +2,17 @@ import Container from "../../components/Shared/Container";
 import { useEffect, useState } from "react";
 import BookCard from "../../components/Cards/BookCard";
 import { motion, AnimatePresence } from "framer-motion";
+import { getAllBooks } from "../../api/books";
 
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const booksPerPage = 4; // Number of books per page
+  const booksPerPage = 4;
 
   useEffect(() => {
-    fetch("https://gutendex.com/books")
-      .then((res) => res.json())
-      .then((data) => {
-        setBooks(data.results);
-      });
+    getAllBooks().then((data) => {
+      setBooks(data.results);
+    });
   }, []);
 
   // Calculate the current books to be displayed
@@ -28,10 +27,14 @@ const Books = () => {
 
   return (
     <Container>
-      <h1 className="text-5xl text-gray-800 font-bold text-center mt-20">
-        Books Bestsellers
-      </h1>
-
+      <div className="flex justify-between items-center mt-20">
+        <h1 className="text-5xl text-gray-800 font-bold text-center ">
+          Books Bestsellers
+        </h1>
+        <div className="flex gap-4">
+          <p>dropdown filter by genre</p>
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mt-20">
         <AnimatePresence>
           {currentBooks.map((book) => (
@@ -46,7 +49,6 @@ const Books = () => {
           ))}
         </AnimatePresence>
       </div>
-
       {/* Pagination Controls */}
       <div className="flex justify-center mt-10 space-x-4">
         <button

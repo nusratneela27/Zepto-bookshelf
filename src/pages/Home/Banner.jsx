@@ -5,7 +5,7 @@ import Container from "../../components/Shared/Container";
 const Banner = () => {
   return (
     <div className="relative">
-      <img src={banner} alt="" className="h-60 md:h-auto" />
+      <img src={banner} alt="banner" className="h-60 md:h-auto" />
       <Container>
         <div className="absolute top-1/4 md:space-y-6">
           <h2 className="md:text-4xl font-semibold italic">Year and Sale</h2>
