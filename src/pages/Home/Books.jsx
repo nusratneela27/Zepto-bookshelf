@@ -7,39 +7,34 @@ import { BiSearch } from "react-icons/bi";
 const Books = () => {
   const [books, setBooks] = useState([]);
   const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState("");
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState(""); // Tracks selected genre
 
   useEffect(() => {
-    const fetchBooks = async (page) => {
-      const res = await fetch(`https://gutendex.com/books?page=${page}`);
+    const fetchBooks = async (page, query = "", genre = "") => {
+      const res = await fetch(
+        `https://gutendex.com/books?page=${page}&search=${query}`
+      );
       const data = await res.json();
-      setBooks(data.results);
+      setBooks(
+        genre
+          ? data.results.filter((book) => book.subjects.includes(genre))
+          : data.results
+      );
 
       // Set total pages based on the total number of results
       setTotalPages(Math.ceil(data.count / data.results.length));
 
-      // Extract genres/topics from the book data
-      const allGenres = new Set();
-      data.results.forEach((book) => {
-        book.subjects?.forEach((subject) => {
-          allGenres.add(subject);
-        });
-      });
-      setGenres([...allGenres]);
+      // Extract unique genres from books
+      const allGenres = data.results.flatMap((book) => book.subjects);
+      setGenres([...new Set(allGenres)]); // Remove duplicates using Set
     };
 
-    fetchBooks(currentPage);
-  }, [currentPage]);
-
-  // Filter books by selected genre and search term
-  const filteredBooks = books.filter((book) => {
-    const matchesGenre = selectedGenre ? book.subjects?.includes(selectedGenre) : true;
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesGenre && matchesSearch;
-  });
+    fetchBooks(currentPage, debouncedSearchTerm, selectedGenre);
+  }, [currentPage, debouncedSearchTerm, selectedGenre]);
 
   // Pagination Controls
   const handleNextPage = () => {
@@ -54,13 +49,38 @@ const Books = () => {
     }
   };
 
+  // Debounce effect for the search input
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setCurrentPage(1); // Reset to the first page when a new search is made
+    }, 500); // Delay in ms (500ms here)
+
+    // Cleanup the timeout if the user is still typing
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
+
+  // Handle search input
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  // Handle genre selection change
+  const handleGenreChange = (e) => {
+    setSelectedGenre(e.target.value);
+    setCurrentPage(1); // Reset to the first page when filtering by genre
+  };
+
   return (
     <Container>
       <div className="flex flex-col md:flex-row justify-between items-center mt-20 gap-3">
-        <h1 className="text-xl md:text-5xl text-gray-800 font-bold text-center">
+        <h1 className="text-xl md:text-5xl text-sky-600 font-bold text-center">
           Books
         </h1>
         <div className="flex gap-4">
+          {/* Search books */}
           <div className="relative w-full max-w-sm">
             <button className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 focus:outline-none">
               <BiSearch className="text-xl" />
@@ -71,14 +91,15 @@ const Books = () => {
               placeholder="Search by title..."
               className="w-full py-2 pl-10 pr-5 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-500"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+              onChange={handleSearchChange}
             />
           </div>
+
           {/* Genre Dropdown Filter */}
           <select
-            className="p-3 text-sm rounded bg-sky-600 text-white w-1/2 md:w-auto"
+            className="p-3 text-sm rounded-lg bg-sky-600 text-white w-1/2 md:w-auto"
             value={selectedGenre}
-            onChange={(e) => setSelectedGenre(e.target.value)}
+            onChange={handleGenreChange}
           >
             <option value="">Filter All Genres</option>
             {genres.map((genre, index) => (
@@ -89,14 +110,16 @@ const Books = () => {
           </select>
         </div>
       </div>
+
+      {/* Book List */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-10 mt-20">
         <AnimatePresence>
-          {filteredBooks.map((book) => (
+          {books.map((book) => (
             <motion.div
               key={book.id}
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3 }} // Shortened transition duration for real-time feedback
+              transition={{ duration: 0.3 }}
             >
               <BookCard book={book} />
             </motion.div>

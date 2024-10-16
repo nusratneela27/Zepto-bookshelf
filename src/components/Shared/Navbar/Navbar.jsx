@@ -1,23 +1,24 @@
 import Container from "../Container";
 import logo from "../../../assets/Logo.webp";
 import Button from "../../Buttons/Button";
-import SearchInput from "./SearchInput";
 import NavRoutes from "./NavRoutes";
 
 const Navbar = () => {
   return (
-    <Container>
-      <div className="flex flex-col space-y-5 md:flex-row items-center justify-between py-6">
-        <img src={logo} alt="logo" />
+    <div className="bg-sky-100">
+      <Container>
+        <div className="flex flex-col space-y-5 md:flex-row items-center justify-between py-6 bg">
+          <img src={logo} alt="logo" />
 
-        <NavRoutes></NavRoutes>
+          <NavRoutes></NavRoutes>
 
-        <div className="flex items-center space-x-4">
-          <SearchInput></SearchInput>
-          <Button label={"Login"}></Button>
+          <div className="flex items-center gap-4">
+            <Button label={"Login"}></Button>
+            <Button label={"Register"}></Button>
+          </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 };
 

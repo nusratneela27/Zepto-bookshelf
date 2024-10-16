@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { FaArrowRight, FaRegHeart, FaHeart } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { NavLink } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const BookCard = ({ book }) => {
   const [isWishListed, setIsWishListed] = useState(false);
+  // const navigate = useNavigate();
 
   const toggleWishList = () => {
     if (isWishListed) {
@@ -14,6 +17,10 @@ const BookCard = ({ book }) => {
     }
     setIsWishListed(!isWishListed);
   };
+
+  // const handleDetailsClick = () => {
+  //   navigate(`/book/${book.id}`);
+  // };
 
   return (
     <div className="flex flex-col items-center p-5 rounded-sm shadow-lg max-w-xs w-full">
@@ -49,20 +56,20 @@ const BookCard = ({ book }) => {
           </motion.div>
 
           {/* Arrow Icon with Framer Motion */}
-          <motion.a
-            href={book.formats["text/html"]}
-            target="_blank"
-            rel="noopener noreferrer"
+          <motion.div
             initial={{ y: -50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             whileHover={{ scale: 1.1 }}
             transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
+            // onClick={handleDetailsClick}
           >
-            <FaArrowRight
-              size={40}
-              className="text-white border-2 rounded-full p-1 cursor-pointer"
-            />
-          </motion.a>
+            <NavLink to={`/book/${book.id}`}>
+              <FaArrowRight
+                size={40}
+                className="text-white border-2 rounded-full p-1 cursor-pointer"
+              />
+            </NavLink>
+          </motion.div>
         </motion.div>
       </div>
 
