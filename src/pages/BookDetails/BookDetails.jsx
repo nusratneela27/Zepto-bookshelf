@@ -1,95 +1,53 @@
-import React from "react";
-import { useLoaderData } from "react-router-dom"; // Import useLoaderData
+import { NavLink } from "react-router-dom";
+import allBanner from "../../assets/allBanner.jpg";
+import { useLoaderData } from "react-router-dom";
+import Button from "../../components/Buttons/Button";
 
 const BookDetails = () => {
-  const book = useLoaderData(); // Get book details from loader
+  const book = useLoaderData();
 
   return (
-    <div className="container mx-auto mt-10">
-      <h1 className="text-4xl font-bold text-center mb-5">{book.title}</h1>
-      <div className="flex justify-center mb-10">
-        <img
-          src={book.formats["image/jpeg"]}
-          alt={book.title}
-          className="h-80"
-        />
+    <div>
+      <div
+        className="relative w-full h-72 bg-cover"
+        style={{ backgroundImage: `url(${allBanner})` }}
+      >
+        <div className="absolute inset-0 text-center bg-amber-50 bg-opacity-50 space-y-4">
+          <h1 className="text-3xl md:text-5xl text-sky-800 font-bold mt-24">
+            Book Details
+          </h1>
+          <div className="flex items-center justify-center text-black md:text-xl font-semibold">
+            <NavLink to={"/"}>Home</NavLink>/<p>{book.title}</p>
+          </div>
+        </div>
       </div>
-      <p className="text-center text-lg mb-5">
-        by {book.authors.map((author) => author.name).join(", ")}
-      </p>
-      <p className="text-center text-gray-600 mb-5">ID: {book.id}</p>
-      <p className="text-justify mx-10">
-        {book.description || "No description available."}
-      </p>
+
+      <div className="flex justify-center items-center gap-10 border rounded-lg shadow-lg p-10 mt-20 mx-96">
+        <div>
+          <img src={book.formats["image/jpeg"]} alt={book.title} className="h-96 w-[550px] rounded-sm" />
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold">{book.title}</h1>
+          <p>
+            <span className="font-bold">Author Name :</span> {book.authors.map((author) => author.name).join(", ")}
+          </p>
+          <p><span className="font-bold">ID :</span> {book.id}</p>
+          <p><span className="font-bold">Subjects :</span> {book.subjects}</p>
+          <p><span className="font-bold">Languages :</span> {book.languages}</p>
+          <p><span className="font-bold">Download :</span> {book.download_count}</p>
+          <p><span className="font-bold">Media Type :</span> {book.media_type}</p>
+          <p><span className="font-bold">Bookshelves :</span> {book.bookshelves}</p>
+          <a
+            href={book.formats["text/html"]}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button label={"Read Book"} customStyles="mt-7"></Button>
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
 
 export default BookDetails;
-
-
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-
-// const BookDetails = () => {
-//   const { id } = useParams(); // Get the book id from the URL
-//   const [book, setBook] = useState(null);
-//   const [loading, setLoading] = useState(true); // Add a loading state
-//   const [error, setError] = useState(null); // Add error state
-
-//   useEffect(() => {
-//     // Fetch book details by id
-//     const fetchBookDetails = async () => {
-//       try {
-//         const res = await fetch(`https://gutendex.com/books?ids=${id}`);
-//         const data = await res.json();
-
-//         // Check if the book exists
-//         if (data.results && data.results.length > 0) {
-//           setBook(data.results[0]); // Set the first book from the response
-//         } else {
-//           setError("Book not found");
-//         }
-//       } catch (err) {
-//         setError("Failed to fetch book details");
-//       } finally {
-//         setLoading(false); // Stop loading
-//       }
-//     };
-
-//     fetchBookDetails();
-//   }, [id]);
-
-//   // Show loading state while fetching
-//   if (loading) {
-//     return <p>Loading...</p>;
-//   }
-
-//   // Show error if the book is not found or if there is a problem with fetching
-//   if (error) {
-//     return <p>{error}</p>;
-//   }
-
-//   // Render book details
-//   return (
-//     <div className="container mx-auto mt-10">
-//       <h1 className="text-4xl font-bold text-center mb-5">{book.title}</h1>
-//       <div className="flex justify-center mb-10">
-//         <img
-//           src={book.formats["image/jpeg"]}
-//           alt={book.title}
-//           className="h-80"
-//         />
-//       </div>
-//       <p className="text-center text-lg mb-5">
-//         by {book.authors.map((author) => author.name).join(", ")}
-//       </p>
-//       <p className="text-center text-gray-600 mb-5">ID: {book.id}</p>
-//       <p className="text-justify mx-10">
-//         {book.description || "No description available."}
-//       </p>
-//     </div>
-//   );
-// };
-
-// export default BookDetails;
