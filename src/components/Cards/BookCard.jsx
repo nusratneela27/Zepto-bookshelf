@@ -1,29 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { FaArrowRight, FaRegHeart, FaHeart } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
+import {
+  addBookToWishlist,
+  isBookInWishlist,
+  removeBookFromWishlist,
+} from "../../utils/localStorageUtils";
 
-const BookCard = ({ book }) => {
+const BookCard = ({ book, onRemoveFromWishlist }) => {
   const [isWishListed, setIsWishListed] = useState(false);
-  // const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsWishListed(isBookInWishlist(book.id));
+  }, [book.id]);
 
   const toggleWishList = () => {
     if (isWishListed) {
+      removeBookFromWishlist(book.id);
       toast.error(`${book.title} removed from Wishlist`);
+      onRemoveFromWishlist && onRemoveFromWishlist();
     } else {
+      addBookToWishlist(book);
       toast.success(`${book.title} added to Wishlist`);
     }
     setIsWishListed(!isWishListed);
   };
 
-  // const handleDetailsClick = () => {
-  //   navigate(`/book/${book.id}`);
-  // };
-
   return (
-    <div className="flex flex-col items-center p-5 rounded-sm shadow-lg max-w-xs w-full">
+    <div
+      className={`flex flex-col items-center p-5 rounded-sm shadow-lg max-w-xs w-full ${
+        isWishListed ? "bg-sky-200" : ""
+      }`}
+    >
       {/* Book Image with Hover Effect */}
       <div className="relative mb-4 group">
         <img
@@ -39,7 +49,7 @@ const BookCard = ({ book }) => {
           whileHover={{ opacity: 1, backgroundColor: "rgba(3, 169, 244, 0.6)" }}
           transition={{ duration: 0.5 }}
         >
-          {/* Heart Icon with Framer Motion animation */}
+          {/* Heart Icon */}
           <motion.div
             className="cursor-pointer me-5"
             initial={{ y: -50, opacity: 0 }}
@@ -55,21 +65,20 @@ const BookCard = ({ book }) => {
             )}
           </motion.div>
 
-          {/* Arrow Icon with Framer Motion */}
-          <motion.div
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            whileHover={{ scale: 1.1 }}
-            transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
-            // onClick={handleDetailsClick}
-          >
-            <NavLink to={`/book/${book.id}`}>
+          {/* Arrow Icon */}
+          <NavLink to={`/book/${book.id}`}>
+            <motion.div
+              initial={{ y: -50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              whileHover={{ scale: 1.1 }}
+              transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
+            >
               <FaArrowRight
                 size={40}
-                className="text-white border-2 rounded-full p-1 cursor-pointer"
+                className="text-white border-2 rounded-full p-1"
               />
-            </NavLink>
-          </motion.div>
+            </motion.div>
+          </NavLink>
         </motion.div>
       </div>
 
@@ -82,10 +91,7 @@ const BookCard = ({ book }) => {
       </h2>
 
       {/* Book Author */}
-      <p
-        // className="text-gray-600 mb-2 text-center"
-        className="text-gray-600 mb-2 w-full text-center overflow-hidden whitespace-nowrap text-ellipsis"
-      >
+      <p className="text-gray-600 mb-2 w-full text-center overflow-hidden whitespace-nowrap text-ellipsis">
         by {book.authors.map((author) => author.name).join(", ")}
       </p>
 
