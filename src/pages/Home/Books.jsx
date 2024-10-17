@@ -112,7 +112,7 @@ const Books = () => {
       </div>
 
       {/* Book List */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-10 mt-20">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-20">
         <AnimatePresence>
           {books.map((book) => (
             <motion.div

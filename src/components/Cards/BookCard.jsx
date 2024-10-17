@@ -30,7 +30,7 @@ const BookCard = ({ book, onRemoveFromWishlist }) => {
 
   return (
     <div
-      className={`flex flex-col items-center p-5 rounded-sm shadow-lg max-w-xs w-full ${
+      className={`flex flex-col items-center p-2 md:p-5 rounded-sm shadow-lg max-w-xs w-full ${
         isWishListed ? "bg-sky-200" : ""
       }`}
     >
@@ -39,7 +39,7 @@ const BookCard = ({ book, onRemoveFromWishlist }) => {
         <img
           src={book.formats["image/jpeg"]}
           alt={book.title}
-          className="rounded-sm h-64 w-48 object-cover"
+          className="rounded-sm h-36 md:h-64 md:w-48 object-cover"
         />
 
         {/* Overlay with Framer Motion for smooth transition */}

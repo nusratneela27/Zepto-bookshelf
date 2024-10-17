@@ -22,9 +22,9 @@ const BookDetails = () => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center gap-10 border rounded-lg shadow-lg p-10 mt-20 mx-96">
+      <div className="flex flex-col md:flex-col lg:flex-row justify-center items-center gap-10 border rounded-lg shadow-lg p-10 mt-20 mx-3 sm:mx-3 md:mx-3 lg:mx-96 lg">
         <div>
-          <img src={book.formats["image/jpeg"]} alt={book.title} className="h-96 w-[550px] rounded-sm" />
+          <img src={book.formats["image/jpeg"]} alt={book.title} className="lg:h-96 lg:w-[550px] rounded-sm" />
         </div>
         <div className="space-y-2">
           <h1 className="text-3xl font-bold">{book.title}</h1>

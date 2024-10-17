@@ -38,7 +38,7 @@ const Wishlist = () => {
 
       {/* Wishlist Items */}
       <Container>
-        <div className="p-5 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-6 gap-4 mt-20">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-20">
           {wishlistBooks.length > 0 ? (
             wishlistBooks.map((book) => (
               <BookCard
