@@ -41,12 +41,12 @@ const Wishlist = () => {
           {wishlistBooks.length > 0 ? (
             wishlistBooks.map((book) => (
               <motion.div
+                key={book.id}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
               >
                 <BookCard
-                  key={book.id}
                   book={book}
                   onRemoveFromWishlist={() => removeFromWishlist(book.id)}
                 />

@@ -14,26 +14,26 @@ const Books = () => {
   const [selectedGenre, setSelectedGenre] = useState("");
 
   useEffect(() => {
-    const fetchBooks = async (page, query = "", genre = "") => {
+    const fetchBooks = async (page, query = "") => {
       const res = await fetch(
         `https://gutendex.com/books?page=${page}&search=${query}`
       );
       const data = await res.json();
-      setBooks(
-        genre
-          ? data.results.filter((book) => book.subjects.includes(genre))
-          : data.results
-      );
+
+      // Set books
+      setBooks(data.results);
 
       // Set total pages based on the total number of results
       setTotalPages(Math.ceil(data.count / data.results.length));
 
+      // Extract unique genres from the "subjects" array
       const allGenres = data.results.flatMap((book) => book.subjects);
-      setGenres([...new Set(allGenres)]);
+      const uniqueGenres = [...new Set(allGenres)]; 
+      setGenres(uniqueGenres);
     };
 
-    fetchBooks(currentPage, debouncedSearchTerm, selectedGenre);
-  }, [currentPage, debouncedSearchTerm, selectedGenre]);
+    fetchBooks(currentPage, debouncedSearchTerm);
+  }, [currentPage, debouncedSearchTerm]);
 
   // Pagination Controls
   const handleNextPage = () => {
@@ -65,11 +65,16 @@ const Books = () => {
     setSearchTerm(e.target.value);
   };
 
-  // Handle genre selection change
+  // Handle genre change
   const handleGenreChange = (e) => {
     setSelectedGenre(e.target.value);
     setCurrentPage(1);
   };
+
+  // Filter books by selected genre
+  const filteredBooks = selectedGenre
+    ? books.filter((book) => book.subjects.includes(selectedGenre))
+    : books;
 
   return (
     <Container>
@@ -94,26 +99,29 @@ const Books = () => {
           </div>
 
           {/* Genre Dropdown Filter */}
-          <select
-            className="p-3 text-sm rounded-lg bg-sky-600 text-white w-1/2 md:w-auto"
-            value={selectedGenre}
-            onChange={handleGenreChange}
-          >
-            <option value="">Filter All Genres</option>
-            {genres.map((genre, index) => (
-              <option key={index} value={genre}>
-                {genre}
-              </option>
-            ))}
-          </select>
+          <div className="relative w-full max-w-sm">
+            <select
+              className="w-full py-2 pl-3 pr-5 rounded-full focus:outline-none focus:ring-2 focus:ring-sky-500"
+              value={selectedGenre}
+              onChange={handleGenreChange}
+            >
+              <option value="">All Genres</option>
+              {genres.map((genre) => (
+                <option key={genre} value={genre}>
+                  {genre}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
       {/* Book List */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-20">
         <AnimatePresence>
-          {books.map((book) => (
+          {filteredBooks.map((book) => (
             <motion.div
+              key={book.id}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
