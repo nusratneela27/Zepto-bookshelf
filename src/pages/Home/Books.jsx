@@ -11,7 +11,7 @@ const Books = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const [selectedGenre, setSelectedGenre] = useState(""); // Tracks selected genre
+  const [selectedGenre, setSelectedGenre] = useState("");
 
   useEffect(() => {
     const fetchBooks = async (page, query = "", genre = "") => {
@@ -28,9 +28,8 @@ const Books = () => {
       // Set total pages based on the total number of results
       setTotalPages(Math.ceil(data.count / data.results.length));
 
-      // Extract unique genres from books
       const allGenres = data.results.flatMap((book) => book.subjects);
-      setGenres([...new Set(allGenres)]); // Remove duplicates using Set
+      setGenres([...new Set(allGenres)]);
     };
 
     fetchBooks(currentPage, debouncedSearchTerm, selectedGenre);
@@ -53,10 +52,9 @@ const Books = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-      setCurrentPage(1); // Reset to the first page when a new search is made
-    }, 500); // Delay in ms (500ms here)
+      setCurrentPage(1);
+    }, 500);
 
-    // Cleanup the timeout if the user is still typing
     return () => {
       clearTimeout(handler);
     };
@@ -70,7 +68,7 @@ const Books = () => {
   // Handle genre selection change
   const handleGenreChange = (e) => {
     setSelectedGenre(e.target.value);
-    setCurrentPage(1); // Reset to the first page when filtering by genre
+    setCurrentPage(1);
   };
 
   return (
@@ -116,9 +114,8 @@ const Books = () => {
         <AnimatePresence>
           {books.map((book) => (
             <motion.div
-              key={book.id}
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
             >
               <BookCard book={book} />
@@ -130,14 +127,22 @@ const Books = () => {
       {/* Pagination Controls */}
       <div className="flex justify-center gap-5 mt-10">
         <button
-          className="p-2 bg-sky-600 text-white rounded"
+          className={`p-2 rounded ${
+            currentPage === 1
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-sky-600 text-white"
+          }`}
           onClick={handlePrevPage}
           disabled={currentPage === 1}
         >
           Previous
         </button>
         <button
-          className="p-2 bg-sky-600 text-white rounded"
+          className={`p-2 rounded ${
+            currentPage === totalPages
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-sky-600 text-white"
+          }`}
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
         >

@@ -42,9 +42,9 @@ const BookCard = ({ book, onRemoveFromWishlist }) => {
           className="rounded-sm h-36 md:h-64 md:w-48 object-cover"
         />
 
-        {/* Overlay with Framer Motion for smooth transition */}
+        {/* Overlay for desktop view */}
         <motion.div
-          className="absolute inset-0 bg-sky-600 bg-opacity-60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300"
+          className="hidden md:flex absolute inset-0 bg-sky-600 bg-opacity-60 opacity-0 group-hover:opacity-100 items-center justify-center transition-opacity duration-300"
           initial={{ opacity: 0 }}
           whileHover={{ opacity: 1, backgroundColor: "rgba(3, 169, 244, 0.6)" }}
           transition={{ duration: 0.5 }}
@@ -96,7 +96,21 @@ const BookCard = ({ book, onRemoveFromWishlist }) => {
       </p>
 
       {/* Book ID */}
-      <p className="text-gray-500">ID: {book.id}</p>
+      <p className="text-gray-500 mb-2">ID: {book.id}</p>
+
+      {/* Mobile view buttons */}
+      <div className="md:hidden flex justify-between space-x-4 mb-2">
+        <div onClick={toggleWishList}>
+          {isWishListed ? <FaHeart size={20} /> : <FaRegHeart size={20} />}
+        </div>
+
+        <NavLink to={`/book/${book.id}`}>
+          <FaArrowRight
+            size={20}
+            className="border-2 border-black rounded-full p-1"
+          />
+        </NavLink>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 # Live Site 
-[Bookshelf](https://faster-ui-task.netlify.app/)
+[Bookshelf](https://zeptobiikshelf.netlify.app/)
 
 
 # Book Library App
@@ -10,7 +10,7 @@ This is a **React.js** application that fetches book data from the [GutenDex API
 
 ### 1. **Books Listing**
    - The homepage displays a list of books fetched from the GutenDex API.
-   - Each book card shows the **title**, **author**, **cover image**, **genre**, and **book ID**.
+   - Each book card shows the **title**, **author**, **cover image**, and **book ID**.
 
 ### 2. **Search Bar**
    - A real-time search bar allows users to filter the books by title.
@@ -25,10 +25,13 @@ This is a **React.js** application that fetches book data from the [GutenDex API
 
 ### 5. **Pagination**
    - The book list is paginated for easier navigation.
-   - Users can switch between pages using a pagination bar (e.g., "Next", "Previous", and numbered pages).
+   - Users can switch between pages using a pagination ("Next", "Previous").
 
 ### 6. **Book Details**
    - Each book card links to a detailed page where more information about the book is displayed.
+
+### 7. **Animation**
+   - Add framer motion animation for showing book card.
 
 ## Pages
 

@@ -3,17 +3,16 @@ import allBanner from "../../assets/allBanner.jpg";
 import { NavLink } from "react-router-dom";
 import BookCard from "../../components/Cards/BookCard";
 import Container from "../../components/Shared/Container";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Wishlist = () => {
   const [wishlistBooks, setWishlistBooks] = useState([]);
 
-  // Fetch wishlist books from local storage
   useEffect(() => {
     const storedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
     setWishlistBooks(storedWishlist);
   }, []);
 
-  // Function to remove a book from wishlist
   const removeFromWishlist = (bookId) => {
     const updatedWishlist = wishlistBooks.filter((book) => book.id !== bookId);
     setWishlistBooks(updatedWishlist);
@@ -41,11 +40,17 @@ const Wishlist = () => {
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-20">
           {wishlistBooks.length > 0 ? (
             wishlistBooks.map((book) => (
-              <BookCard
-                key={book.id}
-                book={book}
-                onRemoveFromWishlist={() => removeFromWishlist(book.id)}
-              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+              >
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  onRemoveFromWishlist={() => removeFromWishlist(book.id)}
+                />
+              </motion.div>
             ))
           ) : (
             <p className="text-center">Your wishlist is empty.</p>
